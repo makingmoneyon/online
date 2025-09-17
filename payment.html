@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Payment Information</title>
+  <style>
+    :root{
+      --bg1:#eef2f3;
+      --bg2:#8e9eab;
+      --card:#ffffff;
+      --accent-start:#2575fc;
+      --accent-end:#6a11cb;
+      --success:#28a745;
+      --danger:#dc3545;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.85);
+      --radius:12px;
+      --shadow: 0 6px 18px rgba(20,20,30,0.08);
+      --maxwidth:720px;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#222}
+    header{
+      background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+      color:white;padding:22px 18px;text-align:center;
+    }
+    header h1{margin:0;font-size:20px;letter-spacing:0.2px}
+    header p{margin:8px 0 0;font-size:14px;opacity:0.95}
+
+    .wrap{max-width:var(--maxwidth);margin:26px auto;padding:18px}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      margin-bottom:18px;
+    }
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    @media(max-width:880px){ .grid{grid-template-columns:1fr} }
+
+    form label{display:block;font-weight:600;margin-bottom:6px}
+    .field{margin-bottom:14px}
+    input[type="text"], input[type="tel"], select{
+      width:100%;padding:12px 14px;border-radius:10px;border:1px solid #dde3ea;font-size:15px;box-sizing:border-box;
+    }
+    .hint{font-size:13px;color:var(--muted);margin-top:6px}
+
+    .banks{display:flex;gap:12px;flex-wrap:wrap}
+    .bank{
+      display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;border:2px solid transparent;cursor:pointer;
+      background:linear-gradient(180deg, rgba(250,250,250,1), rgba(245,245,245,1));
+      min-width:170px;box-sizing:border-box;
+    }
+    .bank:hover{transform:translateY(-3px);transition:transform 170ms ease}
+    .bank input{display:none}
+    .bank-logo{width:56px;height:36px;display:flex;align-items:center;justify-content:center}
+    .bank .meta{flex:1}
+    .bank .name{font-weight:700}
+    .bank .small{font-size:13px;color:var(--muted)}
+
+    /* checked state */
+    .bank.selected{border-color:rgba(37,117,252,0.12);box-shadow:0 8px 22px rgba(37,117,252,0.06);outline: 3px solid rgba(106,17,203,0.06)}
+
+    .actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:8px}
+    .btn{background:var(--accent-end);color:white;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#f3f4f6;color:#111;border:1px solid #e6e7ea}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
+
+    .confirm{
+      text-align:center;padding:22px;border-radius:10px;background:linear-gradient(180deg,rgba(240,255,245,1),white);border:1px solid rgba(0,0,0,0.04)
+    }
+    .confirm h3{margin:0 0 10px}
+    .confirm .line{margin:10px 0;font-size:15px;color:#111}
+    .masked{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f8f9fa;padding:8px;border-radius:8px;display:inline-block}
+
+    .small-note{font-size:13px;color:var(--muted);margin-top:10px}
+
+    .error{color:var(--danger);font-weight:600;margin-top:6px}
+    .success{color:var(--success);font-weight:700;margin-top:6px}
+
+    /* logos: simple stylized SVG placeholders sized within .bank-logo and .confirm-logo */
+    .confirm-logo{width:72px;height:48px;margin:12px auto 6px;display:flex;align-items:center;justify-content:center}
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Payment Information</h1>
+    <p>Provide the account details where we’ll send payments — choose one of the supported banks below.</p>
+  </header>
+
+  <div class="wrap">
+
+    <div class="card grid" role="region" aria-labelledby="payment-heading">
+      <div>
+        <h2 id="payment-heading" style="margin-top:0">Enter Payment Details</h2>
+        <form id="paymentForm" novalidate>
+          <div class="field">
+            <label for="bankChoice">Select Bank</label>
+            <div class="banks" id="banksList" role="radiogroup" aria-label="Choose bank">
+              <!-- Bank options inserted by JS or use the markup below -->
+              <label class="bank" tabindex="0" data-bank="zenith" role="radio" aria-checked="false">
+                <input type="radio" name="bank" value="zenith" />
+                <div class="bank-logo" aria-hidden="true">
+                  <!-- simple Zenith-style SVG (placeholder, not official logo) -->
+                  <svg width="56" height="36" viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="56" height="36" rx="6" fill="#1C7C83"/>
+                    <text x="28" y="22" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">ZEN</text>
+                  </svg>
+                </div>
+                <div class="meta">
+                  <div class="name">Zenith Bank</div>
+                  <div class="small">Corporate / Retail</div>
+                </div>
+              </label>
+
+              <label class="bank" tabindex="0" data-bank="first" role="radio" aria-checked="false">
+                <input type="radio" name="bank" value="first" />
+                <div class="bank-logo" aria-hidden="true">
+                  <!-- simple First Bank-style SVG placeholder -->
+                  <svg width="56" height="36" viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="56" height="36" rx="6" fill="#F04A3B"/>
+                    <text x="28" y="22" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">1st</text>
+                  </svg>
+                </div>
+                <div class="meta">
+                  <div class="name">First Bank</div>
+                  <div class="small">Legacy Nigerian Bank</div>
+                </div>
+              </label>
+
+              <label class="bank" tabindex="0" data-bank="uba" role="radio" aria-checked="false">
+                <input type="radio" name="bank" value="uba" />
+                <div class="bank-logo" aria-hidden="true">
+                  <!-- simple UBA-style SVG placeholder -->
+                  <svg width="56" height="36" viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="56" height="36" rx="6" fill="#ED1B2E"/>
+                    <text x="28" y="22" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">UBA</text>
+                  </svg>
+                </div>
+                <div class="meta">
+                  <div class="name">UBA</div>
+                  <div class="small">United Bank for Africa</div>
+                </div>
+              </label>
+
+            </div>
+            <div class="hint">Tap a bank to select. You can use keyboard (Tab + Enter) for accessibility.</div>
+          </div>
+
+          <div class="field">
+            <label for="accName">Account Name</label>
+            <input id="accName" name="accName" type="text" inputmode="text" autocomplete="name" placeholder="Full account name (as registered)">
+            <div id="errName" class="error" aria-live="polite" style="display:none"></div>
+          </div>
+
+          <div class="field">
+            <label for="accNumber">Account Number</label>
+            <input id="accNumber" name="accNumber" type="tel" inputmode="numeric" autocomplete="off" placeholder="e.g. 0123456789">
+            <div id="errNumber" class="error" aria-live="polite" style="display:none"></div>
+            <div class="hint">Most Nigerian banks use 10-digit account numbers. Enter digits only.</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn" id="saveBtn">Save Details</button>
+            <button type="button" class="btn secondary" id="clearBtn">Clear</button>
+          </div>
+        </form>
+      </div>
+
+      <aside>
+        <div class="card confirm" id="confirmation" aria-live="polite">
+          <div id="confirmState">
+            <div style="font-size:13px;color:var(--muted)">Saved Payment Info</div>
+            <div class="confirm-logo" id="confirmLogo" aria-hidden="true">
+              <!-- placeholder; replaced with bank SVG -->
+              <svg width="72" height="48" viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg">
+                <rect width="72" height="48" rx="8" fill="#cfd8dc"/>
+              </svg>
+            </div>
+            <h3 id="confirmBank">No bank selected</h3>
+            <div class="line">Account: <div class="masked" id="confirmAcc">—</div></div>
+            <div class="line">Name: <strong id="confirmName">—</strong></div>
+            <div id="savedNote" class="small-note">No payment details saved yet.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="card" style="text-align:center;font-size:14px;color:var(--muted)">
+      <div><strong>Security note:</strong> This demo stores details locally in your browser (localStorage). Do not store sensitive credentials here in production. For production, use secure encrypted server-side storage and TLS transport.</div>
+    </div>
+
+  </div>
+
+<script>
+  // Basic UX & validation logic
+  (function(){
+    const banksList = document.getElementById('banksList');
+    const bankLabels = Array.from(banksList.querySelectorAll('.bank'));
+    const form = document.getElementById('paymentForm');
+    const accName = document.getElementById('accName');
+    const accNumber = document.getElementById('accNumber');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const errName = document.getElementById('errName');
+    const errNumber = document.getElementById('errNumber');
+
+    const confirmBank = document.getElementById('confirmBank');
+    const confirmAcc = document.getElementById('confirmAcc');
+    const confirmName = document.getElementById('confirmName');
+    const confirmLogo = document.getElementById('confirmLogo');
+    const savedNote = document.getElementById('savedNote');
+
+    // bank SVGs keyed by id (simple placeholders)
+    const bankSVGs = {
+      zenith: `<svg width="72" height="48" viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg"><rect width="72" height="48" rx="8" fill="#1C7C83"/><text x="36" y="30" text-anchor="middle" fill="white" font-size="16" font-family="sans-serif">ZENITH</text></svg>`,
+      first: `<svg width="72" height="48" viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg"><rect width="72" height="48" rx="8" fill="#F04A3B"/><text x="36" y="30" text-anchor="middle" fill="white" font-size="16" font-family="sans-serif">FIRST</text></svg>`,
+      uba:   `<svg width="72" height="48" viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg"><rect width="72" height="48" rx="8" fill="#ED1B2E"/><text x="36" y="30" text-anchor="middle" fill="white" font-size="16" font-family="sans-serif">UBA</text></svg>`
+    };
+
+    // helper: mark selected bank visually
+    function selectBankElement(el){
+      bankLabels.forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-checked','false'); b.querySelector('input').checked=false; });
+      el.classList.add('selected');
+      el.setAttribute('aria-checked','true');
+      el.querySelector('input').checked = true;
+      // focus for keyboard users
+      el.focus();
+    }
+
+    // click/keyboard support for bank labels
+    bankLabels.forEach(label => {
+      label.addEventListener('click', () => selectBankElement(label));
+      label.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          selectBankElement(label);
+        }
+      });
+    });
+
+    // simple validation functions
+    function validateName(){
+      const v = accName.value.trim();
+      if(!v){ errName.style.display='block'; errName.textContent = 'Account name is required.'; return false; }
+      errName.style.display='none'; return true;
+    }
+    function validateNumber(){
+      const v = accNumber.value.trim();
+      // basic: digits only, typical 10 digits for the banks
+      if(!v){ errNumber.style.display='block'; errNumber.textContent = 'Account number is required.'; return false; }
+      if(!/^\d+$/.test(v)){ errNumber.style.display='block'; errNumber.textContent = 'Account number must contain digits only.'; return false; }
+      if(v.length < 9 || v.length > 12){ errNumber.style.display='block'; errNumber.textContent = 'Account number length looks unusual (expected ~10 digits).'; return false; }
+      errNumber.style.display='none'; return true;
+    }
+
+    accName.addEventListener('input', validateName);
+    accNumber.addEventListener('input', validateNumber);
+
+    // save handler
+    saveBtn.addEventListener('click', () => {
+      const selected = bankLabels.find(b => b.querySelector('input').checked);
+      const bank = selected ? selected.dataset.bank : null;
+      const nameOk = validateName();
+      const numOk = validateNumber();
+
+      if(!bank){
+        alert('Please select one of the supported banks (Zenith, First Bank, UBA).');
+        return;
+      }
+      if(!nameOk || !numOk) return;
+
+      const payload = {
+        bank,
+        accountName: accName.value.trim(),
+        accountNumber: accNumber.value.trim(),
+        savedAt: new Date().toISOString()
+      };
+
+      // Save (demo => localStorage). In production send to server over TLS.
+      localStorage.setItem('paymentInfo', JSON.stringify(payload));
+      showConfirmation(payload);
+    });
+
+    // clear handler
+    clearBtn.addEventListener('click', () => {
+      if(confirm('Clear saved payment details from this browser?')){
+        localStorage.removeItem('paymentInfo');
+        accName.value=''; accNumber.value=''; bankLabels.forEach(b => b.classList.remove('selected'));
+        confirmBank.textContent = 'No bank selected';
+        confirmAcc.textContent = '—';
+        confirmName.textContent = '—';
+        confirmLogo.innerHTML = '';
+        savedNote.textContent = 'No payment details saved yet.';
+      }
+    });
+
+    // show confirmation in right panel
+    function showConfirmation(data){
+      const masked = maskAccount(data.accountNumber);
+      confirmBank.textContent = bankDisplayName(data.bank);
+      confirmAcc.textContent = masked;
+      confirmName.textContent = data.accountName;
+      confirmLogo.innerHTML = bankSVGs[data.bank] || '';
+      savedNote.textContent = 'Saved locally in your browser (demo). For production, data should be stored securely on the server.';
+    }
+
+    function maskAccount(acc){
+      // keep last 4 digits, mask rest
+      if(!acc) return '—';
+      const last = acc.slice(-4);
+      const masked = acc.length > 4 ? '••••••' + last : last;
+      return masked;
+    }
+
+    function bankDisplayName(key){
+      return key === 'zenith' ? 'Zenith Bank' : key === 'first' ? 'First Bank' : key === 'uba' ? 'UBA' : 'Unknown';
+    }
+
+    // restore on load
+    function restore(){
+      const raw = localStorage.getItem('paymentInfo');
+      if(!raw) return;
+      try{
+        const data = JSON.parse(raw);
+        accName.value = data.accountName || '';
+        accNumber.value = data.accountNumber || '';
+        const bankKey = data.bank;
+        const el = bankLabels.find(b => b.dataset.bank === bankKey);
+        if(el) selectBankElement(el);
+        showConfirmation(data);
+      }catch(e){
+        console.error('restore fail', e);
+      }
+    }
+
+    // initialize
+    restore();
+
+    // small UX: clicking a label should focus the hidden input for form semantics
+    bankLabels.forEach(lbl => {
+      lbl.addEventListener('click', () => {
+        const input = lbl.querySelector('input');
+        input.focus();
+      });
+    });
+
+    // allow pressing Enter on form to save
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveBtn.click();
+    });
+
+  })();
+</script>
+
+</body>
+</html>
