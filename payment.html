@@ -4,106 +4,151 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment Information</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #eef2f3, #8e9eab);
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
       margin: 0;
       padding: 0;
       display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 22px;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      padding: 30px;
     }
 
     .card {
       background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      max-width: 500px;
-      width: 90%;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      max-width: 480px;
+      width: 100%;
     }
 
-    h1 {
+    .card h1 {
       text-align: center;
+      font-size: 24px;
       color: #333;
+      margin-bottom: 15px;
+    }
+
+    .payment-image {
+      text-align: center;
       margin-bottom: 20px;
+    }
+
+    .payment-image img {
+      max-width: 120px;
     }
 
     label {
       display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-      color: #333;
+      margin: 10px 0 6px;
+      font-weight: 600;
+      color: #444;
     }
 
     input, select {
       width: 100%;
       padding: 12px;
-      margin-bottom: 15px;
-      border: 2px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
+      margin-bottom: 18px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    input:focus, select:focus {
+      border-color: #2575fc;
+      box-shadow: 0 0 6px rgba(37, 117, 252, 0.4);
+      outline: none;
     }
 
     button {
       width: 100%;
       padding: 15px;
-      background: #28a745;
+      background: linear-gradient(90deg, #28a745, #218838);
       color: white;
       border: none;
       border-radius: 8px;
-      font-size: 18px;
+      font-size: 17px;
+      font-weight: 600;
       cursor: pointer;
       transition: 0.3s;
     }
 
     button:hover {
-      background: #218838;
+      opacity: 0.9;
     }
 
-    .bank-options {
-      display: flex;
-      justify-content: space-around;
-      margin: 20px 0;
-    }
-
-    .bank-options img {
-      height: 50px;
-      object-fit: contain;
+    footer {
+      background: #f1f1f1;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      border-top: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h1>Payment Information</h1>
+  <header>
+    💳 Secure Payment Portal
+  </header>
 
-    <div class="bank-options">
-      <img src="https://seeklogo.com/images/Z/zenith-bank-plc-logo-4B1D5B8B1B-seeklogo.com.png" alt="Zenith Bank Logo">
-      <img src="https://seeklogo.com/images/F/first-bank-nigeria-logo-00FC06CFE6-seeklogo.com.png" alt="First Bank Logo">
-      <img src="https://seeklogo.com/images/U/uba-logo-2B1D547DE2-seeklogo.com.png" alt="UBA Bank Logo">
+  <main>
+    <div class="card">
+      <h1>Enter Payment Details</h1>
+
+      <div class="payment-image">
+        <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Payment Illustration">
+      </div>
+
+      <form onsubmit="event.preventDefault(); window.location.href='success.html';">
+        <label for="accName">Account Name</label>
+        <input type="text" id="accName" name="accName" placeholder="Enter account name" required>
+
+        <label for="accNumber">Account Number</label>
+        <input type="text" id="accNumber" name="accNumber" placeholder="Enter account number" required>
+
+        <label for="bank">Select Bank</label>
+        <select id="bank" name="bank" required>
+          <option value="">-- Choose a bank --</option>
+          <option value="zenith">Zenith Bank</option>
+          <option value="first">First Bank</option>
+          <option value="uba">UBA</option>
+          <option value="gtb">GTBank</option>
+          <option value="access">Access Bank</option>
+        </select>
+
+        <button type="submit">Submit</button>
+      </form>
     </div>
+  </main>
 
-    <form onsubmit="event.preventDefault(); window.location.href='success.html';">
-      <label for="accName">Account Name</label>
-      <input type="text" id="accName" name="accName" placeholder="Enter account name" required>
-
-      <label for="accNumber">Account Number</label>
-      <input type="text" id="accNumber" name="accNumber" placeholder="Enter account number" required>
-
-      <label for="bank">Select Bank</label>
-      <select id="bank" name="bank" required>
-        <option value="">-- Choose a bank --</option>
-        <option value="zenith">Zenith Bank</option>
-        <option value="first">First Bank</option>
-        <option value="uba">UBA</option>
-      </select>
-
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+  <footer>
+    🔒 Your payment details are safe and encrypted. Please ensure your bank info is correct.
+  </footer>
 
 </body>
 </html>
