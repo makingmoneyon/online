@@ -3,199 +3,252 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Puzzle Challenge - Win Cash!</title>
+  <title>Puzzle Game Challenge</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #f9f9f9, #dfe9f3);
       margin: 0;
       padding: 0;
-      background: #f9f9f9;
+      text-align: center;
       color: #333;
     }
+
     header {
-      background: #4CAF50;
+      background: #007bff;
       color: white;
-      padding: 15px;
-      text-align: center;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
       padding: 20px;
     }
-    .puzzle {
-      margin-bottom: 30px;
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 24px;
     }
-    .puzzle img {
-      max-width: 100%;
-      border: 2px solid #ddd;
-      border-radius: 6px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      background: #4CAF50;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 20px;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    .result {
-      text-align: center;
-      margin-top: 20px;
+
+    #timer {
       font-size: 20px;
       font-weight: bold;
     }
-    .award {
-      display: none;
-      text-align: center;
-      margin-top: 20px;
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 15px;
     }
-    .award a {
-      display: inline-block;
+
+    .puzzle {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .puzzle img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .puzzle input {
+      width: 90%;
+      padding: 10px;
       margin-top: 10px;
-      padding: 12px 20px;
-      background: gold;
-      color: black;
-      text-decoration: none;
-      font-weight: bold;
+      border: 2px solid #ccc;
       border-radius: 6px;
+      font-size: 16px;
+      outline: none;
     }
-    @media (max-width: 600px) {
-      header h1 { font-size: 20px; }
-      .result { font-size: 18px; }
+
+    .puzzle input.correct {
+      border-color: green;
+      background: #eaffea;
+    }
+
+    .puzzle input.incorrect {
+      border-color: red;
+      background: #ffeaea;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    #result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 20px;
+      }
+      #timer {
+        font-size: 18px;
+      }
+      .puzzle input {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎯 Puzzle Challenge - Win Up To $50!</h1>
-    <p>Solve all 10 puzzles correctly to claim your reward.</p>
-  </header>
 
-  <div class="container" id="game">
-    
-    <!-- Puzzle 1 -->
-    <div class="puzzle">
-      <h3>Puzzle 1</h3>
-      <img src="images/puzzle1.jpg" alt="Puzzle 1">
-      <input type="text" placeholder="Enter your answer" data-answer="bed of the same feathers">
-    </div>
+<header>
+  <h1>🎉 Puzzle Game Challenge 🎉</h1>
+  <div id="timer">Loading countdown...</div>
+</header>
 
-    <!-- Puzzle 2 -->
-    <div class="puzzle">
-      <h3>Puzzle 2</h3>
-      <img src="images/puzzle2.jpg" alt="Puzzle 2">
-      <input type="text" placeholder="Enter your answer" data-answer="content">
-    </div>
+<div class="container">
+  <p>Solve all 10 puzzles. Rewards based on your score:</p>
+  <ul style="text-align:left; max-width:400px; margin: 0 auto;">
+    <li>✅ 10 correct → $50</li>
+    <li>✅ 6–9 correct → $10</li>
+    <li>✅ 1–3 correct → $2</li>
+  </ul>
 
-    <!-- Puzzle 3 -->
-    <div class="puzzle">
-      <h3>Puzzle 3</h3>
-      <img src="images/puzzle3.jpg" alt="Puzzle 3">
-      <input type="text" placeholder="Enter your answer" data-answer="fantasy">
-    </div>
-
-    <!-- Puzzle 4 -->
-    <div class="puzzle">
-      <h3>Puzzle 4</h3>
-      <img src="images/puzzle4.jpg" alt="Puzzle 4">
-      <input type="text" placeholder="Enter your answer" data-answer="water mark">
-    </div>
-
-    <!-- Puzzle 5 -->
-    <div class="puzzle">
-      <h3>Puzzle 5</h3>
-      <img src="images/puzzle5.jpg" alt="Puzzle 5">
-      <input type="text" placeholder="Enter your answer" data-answer="capability">
-    </div>
-
-    <!-- Puzzle 6 -->
-    <div class="puzzle">
-      <h3>Puzzle 6</h3>
-      <img src="images/puzzle6.jpg" alt="Puzzle 6">
-      <input type="text" placeholder="Enter your answer" data-answer="power bank">
-    </div>
-
-    <!-- Add Puzzles 7–10 -->
-    <div class="puzzle">
-      <h3>Puzzle 7</h3>
-      <img src="images/puzzle7.jpg" alt="Puzzle 7">
-      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
-    </div>
-
-    <div class="puzzle">
-      <h3>Puzzle 8</h3>
-      <img src="images/puzzle8.jpg" alt="Puzzle 8">
-      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
-    </div>
-
-    <div class="puzzle">
-      <h3>Puzzle 9</h3>
-      <img src="images/puzzle9.jpg" alt="Puzzle 9">
-      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
-    </div>
-
-    <div class="puzzle">
-      <h3>Puzzle 10</h3>
-      <img src="images/puzzle10.jpg" alt="Puzzle 10">
-      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
-    </div>
-
-    <button onclick="checkAnswers()">Submit Answers</button>
-    <div class="result" id="result"></div>
-
-    <div class="award" id="award">
-      <h2>🎉 Congratulations!</h2>
-      <p id="award-text"></p>
-      <a href="https://mobilerewards.link/unlock/sXxG" target="_blank">Get Award 🥇</a>
-    </div>
+  <!-- Puzzle 1 -->
+  <div class="puzzle">
+    <h3>Puzzle 1</h3>
+    <img src="images/puzzle1.jpg" alt="Puzzle 1">
+    <input type="text" placeholder="Enter your answer" data-answer="bed of the same feathers">
   </div>
 
-  <script>
-    function checkAnswers() {
-      let inputs = document.querySelectorAll("input");
-      let score = 0;
+  <!-- Puzzle 2 -->
+  <div class="puzzle">
+    <h3>Puzzle 2</h3>
+    <img src="images/puzzle2.jpg" alt="Puzzle 2">
+    <input type="text" placeholder="Enter your answer" data-answer="content">
+  </div>
 
-      inputs.forEach(input => {
-        let correct = input.dataset.answer.toLowerCase().trim();
-        let user = input.value.toLowerCase().trim();
-        if (user === correct) {
-          score++;
-        }
-      });
+  <!-- Puzzle 3 -->
+  <div class="puzzle">
+    <h3>Puzzle 3</h3>
+    <img src="images/puzzle3.jpg" alt="Puzzle 3">
+    <input type="text" placeholder="Enter your answer" data-answer="fantasy">
+  </div>
 
-      let result = document.getElementById("result");
-      result.innerHTML = `You got ${score} out of 10 correct.`;
+  <!-- Puzzle 4 -->
+  <div class="puzzle">
+    <h3>Puzzle 4</h3>
+    <img src="images/puzzle4.jpg" alt="Puzzle 4">
+    <input type="text" placeholder="Enter your answer" data-answer="water mark">
+  </div>
 
-      let award = document.getElementById("award");
-      let awardText = document.getElementById("award-text");
+  <!-- Puzzle 5 -->
+  <div class="puzzle">
+    <h3>Puzzle 5</h3>
+    <img src="images/puzzle5.jpg" alt="Puzzle 5">
+    <input type="text" placeholder="Enter your answer" data-answer="capability">
+  </div>
 
-      if (score === 10) {
-        awardText.innerHTML = "You won <b>$50</b>! 🎉";
-        award.style.display = "block";
-      } else if (score >= 6) {
-        awardText.innerHTML = "You won <b>$10</b>! 🥳";
-        award.style.display = "block";
-      } else if (score <= 3) {
-        awardText.innerHTML = "You won <b>$2</b>. 💰";
-        award.style.display = "block";
-      } else {
-        awardText.innerHTML = "Keep trying! 🔄";
-        award.style.display = "block";
-      }
+  <!-- Puzzle 6 -->
+  <div class="puzzle">
+    <h3>Puzzle 6</h3>
+    <img src="images/puzzle6.jpg" alt="Puzzle 6">
+    <input type="text" placeholder="Enter your answer" data-answer="power bank">
+  </div>
+
+  <!-- Puzzle 7 -->
+  <div class="puzzle">
+    <h3>Puzzle 7</h3>
+    <img src="images/puzzle7.jpg" alt="Puzzle 7">
+    <input type="text" placeholder="Enter your answer" data-answer="loyalty">
+  </div>
+
+  <!-- Puzzle 8 -->
+  <div class="puzzle">
+    <h3>Puzzle 8</h3>
+    <img src="images/puzzle8.jpg" alt="Puzzle 8">
+    <input type="text" placeholder="Enter your answer" data-answer="energy">
+  </div>
+
+  <!-- Puzzle 9 -->
+  <div class="puzzle">
+    <h3>Puzzle 9</h3>
+    <img src="images/puzzle9.jpg" alt="Puzzle 9">
+    <input type="text" placeholder="Enter your answer" data-answer="team work">
+  </div>
+
+  <!-- Puzzle 10 -->
+  <div class="puzzle">
+    <h3>Puzzle 10</h3>
+    <img src="images/puzzle10.jpg" alt="Puzzle 10">
+    <input type="text" placeholder="Enter your answer" data-answer="vision">
+  </div>
+
+  <button onclick="checkAnswers()">Submit Answers</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  // Countdown Timer (3 days from now)
+  const timerElement = document.getElementById("timer");
+  const endDate = new Date().getTime() + (3 * 24 * 60 * 60 * 1000);
+
+  const countdown = setInterval(() => {
+    const now = new Date().getTime();
+    const distance = endDate - now;
+
+    if (distance < 0) {
+      clearInterval(countdown);
+      timerElement.innerHTML = "⏰ Time is up!";
+      return;
     }
-  </script>
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    timerElement.innerHTML = `${days} Days : ${hours} Hrs : ${minutes} Min : ${seconds} Sec`;
+  }, 1000);
+
+  // Check Answers
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('.puzzle input');
+    let score = 0;
+
+    inputs.forEach(input => {
+      const correctAnswer = input.dataset.answer.toLowerCase().trim();
+      const userAnswer = input.value.toLowerCase().trim();
+
+      if (userAnswer === correctAnswer) {
+        input.classList.add("correct");
+        input.classList.remove("incorrect");
+        score++;
+      } else {
+        input.classList.add("incorrect");
+        input.classList.remove("correct");
+      }
+    });
+
+    let reward = "";
+    if (score === 10) reward = "$50 🏆";
+    else if (score >= 6) reward = "$10 🎉";
+    else if (score >= 1) reward = "$2 💰";
+    else reward = "No reward 😢";
+
+    document.getElementById("result").innerHTML = 
+      `You got <b>${score}/10</b> correct.<br>Your reward: <b>${reward}</b><br><br>
+      <a href="https://mobilerewards.link/unlock/sXxG" target="_blank">
+        <button>🎁 Get Your Award</button>
+      </a>`;
+  }
+</script>
+
 </body>
 </html>
