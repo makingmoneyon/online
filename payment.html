@@ -113,15 +113,16 @@
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your PUBLIC KEY
+      emailjs.init("RLtZ_3M8jZolNXTh3"); // ✅ Replace with your PUBLIC KEY
     })();
 
     document.getElementById("paymentForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", "#paymentForm")
+
+      emailjs.sendForm("service_8t4rx1b", "template_amyys18", this)
         .then(function(response) {
           console.log("SUCCESS!", response.status, response.text);
-          window.location.href = "success.html"; // Redirect to success page
+          window.location.href = "success.html"; // ✅ Redirect after submit
         }, function(error) {
           console.error("FAILED...", error);
           document.getElementById("formStatus").innerHTML = 
