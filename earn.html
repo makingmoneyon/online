@@ -2,236 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Remote Job Academy Access</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Challenge - Win Cash!</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to right, #f8f9fa, #e9ecef);
+      background: #f9f9f9;
       color: #333;
-      line-height: 1.6;
     }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 30px;
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 15px;
       text-align: center;
     }
-
-    h1 {
-      color: #222;
-      margin-bottom: 20px;
-      font-size: 2.2rem;
-    }
-
-    .countdown {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 30px 0;
-      flex-wrap: wrap;
-    }
-
-    .time-box {
-      background: #fff;
+    .container {
+      max-width: 800px;
+      margin: auto;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      min-width: 80px;
-      flex: 1;
-      max-width: 120px;
     }
-
-    .time-box span {
-      display: block;
-      font-size: 36px;
+    .puzzle {
+      margin-bottom: 30px;
+    }
+    .puzzle img {
+      max-width: 100%;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
       font-weight: bold;
-      color: #e63946;
     }
-
-    .time-box small {
-      font-size: 14px;
-      text-transform: uppercase;
-      color: #666;
+    .award {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
     }
-
-    .highlight {
-      background: #e63946;
-      color: #fff;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-weight: bold;
-      margin: 20px 0;
+    .award a {
       display: inline-block;
-      font-size: 1.1rem;
-    }
-
-    .btn {
-      display: inline-block;
-      background: #06d6a0;
-      color: #fff;
-      padding: 15px 25px;
-      margin: 20px 0;
-      border-radius: 8px;
+      margin-top: 10px;
+      padding: 12px 20px;
+      background: gold;
+      color: black;
       text-decoration: none;
-      font-size: 18px;
       font-weight: bold;
-      transition: 0.3s;
+      border-radius: 6px;
     }
-
-    .btn:hover {
-      background: #05b386;
-    }
-
-    .offer {
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      margin: 30px 0;
-      text-align: left;
-    }
-
-    .offer h2 {
-      margin-top: 0;
-    }
-
-    .offer ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .offer ul li {
-      background: url('https://cdn-icons-png.flaticon.com/512/190/190411.png') no-repeat left center;
-      background-size: 18px;
-      padding-left: 30px;
-      margin: 10px 0;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-
-      .time-box span {
-        font-size: 28px;
-      }
-
-      .btn {
-        width: 100%;
-        font-size: 16px;
-        padding: 12px;
-      }
-
-      .offer {
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 15px;
-      }
-
-      .countdown {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .time-box {
-        width: 100%;
-        max-width: 200px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      p {
-        font-size: 0.95rem;
-      }
+    @media (max-width: 600px) {
+      header h1 { font-size: 20px; }
+      .result { font-size: 18px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Unlock The Easier Shortcut To Earning In Dollars</h1>
-    <p><strong>By Working With Foreign Companies Without Having a Tech Skill</strong><br>
-    …and still Get Paid Even If You Don’t Do The Work Yourself!</p>
+  <header>
+    <h1>🎯 Puzzle Challenge - Win Up To $50!</h1>
+    <p>Solve all 10 puzzles correctly to claim your reward.</p>
+  </header>
 
-    <!-- Countdown Timer -->
-    <div class="countdown">
-      <div class="time-box"><span id="days">00</span><small>Days</small></div>
-      <div class="time-box"><span id="hours">00</span><small>Hrs</small></div>
-      <div class="time-box"><span id="minutes">00</span><small>Min</small></div>
-      <div class="time-box"><span id="seconds">00</span><small>Sec</small></div>
+  <div class="container" id="game">
+    
+    <!-- Puzzle 1 -->
+    <div class="puzzle">
+      <h3>Puzzle 1</h3>
+      <img src="images/puzzle1.jpg" alt="Puzzle 1">
+      <input type="text" placeholder="Enter your answer" data-answer="bed of the same feathers">
     </div>
 
-    <p class="highlight">4 Slots Left For This Final Batch</p>
-    <p><strong>CONGRATS!</strong> Your discount is now ready and will be available till tomorrow midnight (or until slots run out).</p>
-
-    <!-- Access Section -->
-    <div class="offer">
-      <h2>How To Unlock Your Access</h2>
-      <p>Instead of paying, you can now unlock access to the <strong>Remote Job Academy</strong> by simply completing one of our quick partner offers.  
-      This helps us verify that you are serious and it keeps the training completely free for you.</p>
-
-      <p><strong>Steps:</strong></p>
-      <ul>
-        <li>Click the button below to open the offer page.</li>
-        <li>Complete one of the available offers (it usually takes 1–3 minutes).</li>
-        <li>Once completed, your exclusive access to the training will be unlocked instantly.</li>
-      </ul>
-
-      <a href="YOUR_OFFER_LINK_HERE" class="btn">👉 Click Here To Complete An Offer</a>
-
-      <p style="margin-top:15px; font-size:0.95rem; color:#555;">
-        *Make sure to complete the offer fully so your access can be verified and activated.
-      </p>
+    <!-- Puzzle 2 -->
+    <div class="puzzle">
+      <h3>Puzzle 2</h3>
+      <img src="images/puzzle2.jpg" alt="Puzzle 2">
+      <input type="text" placeholder="Enter your answer" data-answer="content">
     </div>
 
-    <div class="offer">
-      <h2>Here’s Everything You Get Today:</h2>
-      <ul>
-        <li>The Hot selling skills kit (Value: ₦250k)</li>
-        <li>Lifetime Access To the Remote Money Online School (Value: ₦500k)</li>
-        <li>Lifetime Access to the Freelance for Smartphone Course (Value: ₦100k)</li>
-        <li>Done-for-you Conversations (Value: ₦100k)</li>
-        <li>Access To Mentorship & Support Group (Value: ₦70k)</li>
-        <li>Certificate (Value: ₦30k)</li>
-      </ul>
-      <p><strong>Total Value = ₦1,150,000</strong><br>
-      All yours today for <strong>FREE</strong> — just complete one quick offer.</p>
+    <!-- Puzzle 3 -->
+    <div class="puzzle">
+      <h3>Puzzle 3</h3>
+      <img src="images/puzzle3.jpg" alt="Puzzle 3">
+      <input type="text" placeholder="Enter your answer" data-answer="fantasy">
+    </div>
+
+    <!-- Puzzle 4 -->
+    <div class="puzzle">
+      <h3>Puzzle 4</h3>
+      <img src="images/puzzle4.jpg" alt="Puzzle 4">
+      <input type="text" placeholder="Enter your answer" data-answer="water mark">
+    </div>
+
+    <!-- Puzzle 5 -->
+    <div class="puzzle">
+      <h3>Puzzle 5</h3>
+      <img src="images/puzzle5.jpg" alt="Puzzle 5">
+      <input type="text" placeholder="Enter your answer" data-answer="capability">
+    </div>
+
+    <!-- Puzzle 6 -->
+    <div class="puzzle">
+      <h3>Puzzle 6</h3>
+      <img src="images/puzzle6.jpg" alt="Puzzle 6">
+      <input type="text" placeholder="Enter your answer" data-answer="power bank">
+    </div>
+
+    <!-- Add Puzzles 7–10 -->
+    <div class="puzzle">
+      <h3>Puzzle 7</h3>
+      <img src="images/puzzle7.jpg" alt="Puzzle 7">
+      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
+    </div>
+
+    <div class="puzzle">
+      <h3>Puzzle 8</h3>
+      <img src="images/puzzle8.jpg" alt="Puzzle 8">
+      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
+    </div>
+
+    <div class="puzzle">
+      <h3>Puzzle 9</h3>
+      <img src="images/puzzle9.jpg" alt="Puzzle 9">
+      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
+    </div>
+
+    <div class="puzzle">
+      <h3>Puzzle 10</h3>
+      <img src="images/puzzle10.jpg" alt="Puzzle 10">
+      <input type="text" placeholder="Enter your answer" data-answer="PUT_ANSWER_HERE">
+    </div>
+
+    <button onclick="checkAnswers()">Submit Answers</button>
+    <div class="result" id="result"></div>
+
+    <div class="award" id="award">
+      <h2>🎉 Congratulations!</h2>
+      <p id="award-text"></p>
+      <a href="https://mobilerewards.link/unlock/sXxG" target="_blank">Get Award 🥇</a>
     </div>
   </div>
 
   <script>
-    // Countdown Timer - Starts from 3 days
-    const countdownDate = new Date().getTime() + (3 * 24 * 60 * 60 * 1000);
+    function checkAnswers() {
+      let inputs = document.querySelectorAll("input");
+      let score = 0;
 
-    const x = setInterval(function() {
-      const now = new Date().getTime();
-      const distance = countdownDate - now;
+      inputs.forEach(input => {
+        let correct = input.dataset.answer.toLowerCase().trim();
+        let user = input.value.toLowerCase().trim();
+        if (user === correct) {
+          score++;
+        }
+      });
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      let result = document.getElementById("result");
+      result.innerHTML = `You got ${score} out of 10 correct.`;
 
-      document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
-      document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
-      document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
-      document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+      let award = document.getElementById("award");
+      let awardText = document.getElementById("award-text");
 
-      if (distance < 0) {
-        clearInterval(x);
-        document.querySelector(".countdown").innerHTML = "<h2 style='color:red'>Offer Expired!</h2>";
+      if (score === 10) {
+        awardText.innerHTML = "You won <b>$50</b>! 🎉";
+        award.style.display = "block";
+      } else if (score >= 6) {
+        awardText.innerHTML = "You won <b>$10</b>! 🥳";
+        award.style.display = "block";
+      } else if (score <= 3) {
+        awardText.innerHTML = "You won <b>$2</b>. 💰";
+        award.style.display = "block";
+      } else {
+        awardText.innerHTML = "Keep trying! 🔄";
+        award.style.display = "block";
       }
-    }, 1000);
+    }
   </script>
 </body>
 </html>
