@@ -15,7 +15,6 @@
     }
 
     header {
-      background: #6a11cb;
       background: linear-gradient(90deg, #2575fc, #6a11cb);
       color: white;
       padding: 20px;
@@ -77,15 +76,36 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 15px;
       transition: 0.3s;
     }
     button:hover { background: #218838; }
 
-    #result {
+    #resultDesktop, #resultMobile {
       font-size: 20px;
       margin-top: 20px;
       font-weight: bold;
+    }
+
+    .notify {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Progress Bar */
+    #progressWrapper {
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+      height: 15px;
+    }
+    #progressBar {
+      background: #28a745;
+      width: 0%;
+      height: 100%;
+      transition: width 0.3s ease-in-out;
     }
 
     @media (max-width: 768px) {
@@ -127,18 +147,19 @@
     <button onclick="startGame()">Proceed ▶</button>
   </div>
 
-  <!-- Desktop: All puzzles at once -->
+  <!-- Desktop -->
   <div id="desktopGame" class="screen desktop-view">
     <div id="puzzlesDesktop"></div>
-    <button onclick="checkAnswers()">Submit Answers</button>
-    <div id="result"></div>
+    <div id="resultDesktop"></div>
+    <button onclick="checkAnswers()">Submit All Answers</button>
   </div>
 
-  <!-- Mobile: One puzzle at a time -->
+  <!-- Mobile -->
   <div id="mobileGame" class="screen mobile-view">
+    <div id="progressWrapper"><div id="progressBar"></div></div>
     <div id="puzzleContainer"></div>
-    <button id="nextBtn" onclick="nextPuzzle()">Next ▶</button>
-    <div id="result"></div>
+    <button id="nextBtn" onclick="nextPuzzle()" style="display:none;">Next ▶</button>
+    <div id="resultMobile"></div>
   </div>
 </div>
 
@@ -158,24 +179,34 @@
       if (time < 0) {
         clearInterval(timerInterval);
         timerElement.innerHTML = "⏰ Time is up!";
-        checkAnswers(); // auto-submit when time runs out
+        checkAnswers(); // auto-submit
       }
     }, 1000);
   }
 
   // ---------------- PUZZLES ----------------
   const puzzles = [
-    {img:"feem_924CF_IMG_1202_edited.jpg", answer:"content"},
-    {img:"feem_924CF_IMG_1206_edited.jpg", answer:"capability"},
-    {img:"feem_924CF_IMG_1207_edited.jpg", answer:"power bank"},
-    {img:"feem_924CF_IMG_1208_edited.jpg", answer:"fantasy"},
-    {img:"feem_924CF_IMG_1236_edited.jpg", answer:"travel over sea"},
-    {img:"feem_924CF_IMG_1237_edited.jpg", answer:"try to understand"},
-    {img:"feem_924CF_IMG_1241_edited.jpg", answer:"ready to go"},
-    {img:"feem_924CF_IMG_1201_edited.jpg", answer:"water mark"},
-    {img:"feem_924CF_IMG_1243_edited.jpg", answer:"side hustle"},
-    {img:"feem_924CF_IMG_1238_edited.jpg", answer:"forget it"}
+    {img:"feem_924CF_IMG_1202_edited.jpg", answer:"content", alt:"Puzzle image about content"},
+    {img:"feem_924CF_IMG_1206_edited.jpg", answer:"capability", alt:"Puzzle showing capability"},
+    {img:"feem_924CF_IMG_1207_edited.jpg", answer:"power bank", alt:"Puzzle with a power bank"},
+    {img:"feem_924CF_IMG_1208_edited.jpg", answer:"fantasy", alt:"Fantasy themed puzzle"},
+    {img:"feem_924CF_IMG_1236_edited.jpg", answer:"travel over sea", alt:"Travel over sea image"},
+    {img:"feem_924CF_IMG_1237_edited.jpg", answer:"try to understand", alt:"Puzzle hinting understanding"},
+    {img:"feem_924CF_IMG_1241_edited.jpg", answer:"ready to go", alt:"Ready to go puzzle"},
+    {img:"feem_924CF_IMG_1201_edited.jpg", answer:"water mark", alt:"Puzzle with water mark"},
+    {img:"feem_924CF_IMG_1243_edited.jpg", answer:"side hustle", alt:"Side hustle representation"},
+    {img:"feem_924CF_IMG_1238_edited.jpg", answer:"forget it", alt:"Forget it puzzle"}
   ];
+
+  // Shuffle puzzles
+  function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  shuffleArray(puzzles);
 
   // ---------------- INTRO TO GAME ----------------
   function startGame() {
@@ -188,7 +219,20 @@
       document.getElementById("mobileGame").classList.add("active");
       loadMobilePuzzle(0);
     }
+
+    time = 300; // reset timer
     startCountdown();
+
+    // Restore saved state if available
+    const saved = localStorage.getItem("puzzleProgress");
+    if (saved) {
+      const savedData = JSON.parse(saved);
+      puzzles.forEach((p, i) => {
+        if (savedData[i]?.userAnswer) {
+          p.userAnswer = savedData[i].userAnswer;
+        }
+      });
+    }
   }
 
   // ---------------- DESKTOP ----------------
@@ -199,8 +243,10 @@
       container.innerHTML += `
         <div class="puzzle">
           <h3>Puzzle ${i+1}</h3>
-          <img src="${p.img}" alt="Puzzle ${i+1}">
-          <input type="text" placeholder="Enter your answer" data-answer="${p.answer}" onblur="checkImmediate(this)">
+          <img src="${p.img}" alt="${p.alt}">
+          <input type="text" placeholder="Enter your answer" data-answer="${p.answer}" id="input${i}" value="${p.userAnswer || ''}">
+          <button onclick="submitAnswer(${i}, 'desktop')">Submit</button>
+          <div id="notify${i}" class="notify"></div>
         </div>`;
     });
   }
@@ -212,16 +258,16 @@
     container.innerHTML = `
       <div class="puzzle">
         <h3>Puzzle ${i+1}</h3>
-        <img src="${puzzles[i].img}" alt="Puzzle ${i+1}">
-        <input type="text" placeholder="Enter your answer" 
-          data-answer="${puzzles[i].answer}" onblur="checkImmediate(this)">
+        <img src="${puzzles[i].img}" alt="${puzzles[i].alt}">
+        <input type="text" placeholder="Enter your answer" data-answer="${puzzles[i].answer}" id="mobileInput" value="${puzzles[i].userAnswer || ''}">
+        <button onclick="submitAnswer(${i}, 'mobile')">Submit</button>
+        <div id="mobileNotify" class="notify"></div>
       </div>`;
+    document.getElementById("progressBar").style.width = ((i+1)/puzzles.length)*100 + "%";
+    document.getElementById("nextBtn").style.display = "none";
   }
 
   function nextPuzzle() {
-    const input = document.querySelector('#puzzleContainer input');
-    puzzles[currentPuzzle].userAnswer = input.value.trim();
-
     if (currentPuzzle < puzzles.length - 1) {
       currentPuzzle++;
       loadMobilePuzzle(currentPuzzle);
@@ -231,17 +277,45 @@
     }
   }
 
-  // ---------------- INSTANT CHECK ----------------
-  function checkImmediate(input) {
-    const correctAnswer = input.dataset.answer.toLowerCase().trim();
-    const userAnswer = input.value.toLowerCase().trim();
-    if (!userAnswer) return;
+  // ---------------- SUBMIT ANSWER ----------------
+  function submitAnswer(index, mode) {
+    let input, notify;
+    if (mode === "desktop") {
+      input = document.getElementById(`input${index}`);
+      notify = document.getElementById(`notify${index}`);
+    } else {
+      input = document.getElementById("mobileInput");
+      notify = document.getElementById("mobileNotify");
+    }
+
+    const correctAnswer = input.dataset.answer.toLowerCase().replace(/\s+/g, '');
+    const userAnswer = input.value.toLowerCase().replace(/\s+/g, '');
+
+    if (!userAnswer) {
+      notify.innerHTML = "⚠️ Please enter an answer";
+      notify.style.color = "orange";
+      return;
+    }
+
     if (userAnswer === correctAnswer) {
       input.classList.add("correct");
       input.classList.remove("incorrect");
+      notify.innerHTML = "✅ Correct!";
+      notify.style.color = "green";
     } else {
       input.classList.add("incorrect");
       input.classList.remove("correct");
+      notify.innerHTML = "❌ Wrong!";
+      notify.style.color = "red";
+    }
+
+    // Save answer
+    puzzles[index].userAnswer = input.value.trim();
+    localStorage.setItem("puzzleProgress", JSON.stringify(puzzles));
+
+    // Show Next on mobile
+    if (mode === "mobile") {
+      document.getElementById("nextBtn").style.display = "inline-block";
     }
   }
 
@@ -250,22 +324,11 @@
     clearInterval(timerInterval);
     let score = 0;
 
-    // Desktop
-    const inputs = document.querySelectorAll('#puzzlesDesktop input');
-    inputs.forEach((input, i) => {
-      if (input.value.toLowerCase().trim() === input.dataset.answer.toLowerCase().trim()) {
+    puzzles.forEach(p => {
+      if (p.userAnswer && p.userAnswer.toLowerCase().trim() === p.answer.toLowerCase()) {
         score++;
       }
     });
-
-    // Mobile
-    if (window.innerWidth <= 768) {
-      puzzles.forEach(p => {
-        if (p.userAnswer && p.userAnswer.toLowerCase() === p.answer.toLowerCase()) {
-          score++;
-        }
-      });
-    }
 
     let reward = "";
     if (score === 10) reward = "$50 🏆";
@@ -273,11 +336,15 @@
     else if (score >= 1) reward = "$2 💰";
     else reward = "No reward 😢";
 
-    document.getElementById("result").innerHTML = 
-      `You got <b>${score}/10</b> correct.<br>Your reward: <b>${reward}</b><br><br>
+    const resultText = `You got <b>${score}/10</b> correct.<br>Your reward: <b>${reward}</b><br><br>
       <a href="https://mobilerewards.link/unlock/sXxG" target="_blank">
         <button>🎁 Get Your Award</button>
       </a>`;
+
+    document.getElementById("resultDesktop").innerHTML = resultText;
+    document.getElementById("resultMobile").innerHTML = resultText;
+
+    localStorage.removeItem("puzzleProgress"); // clear progress after finishing
   }
 </script>
 
