@@ -36,20 +36,11 @@
       padding: 15px;
     }
 
-    .screen {
-      display: none;
-    }
-    .active {
-      display: block;
-    }
+    .screen { display: none; }
+    .active { display: block; }
 
-    .intro {
-      padding: 30px;
-    }
-    .intro h2 {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
+    .intro { padding: 30px; }
+    .intro h2 { font-size: 22px; margin-bottom: 15px; }
 
     .puzzle {
       background: white;
@@ -96,9 +87,7 @@
       transition: 0.3s;
     }
 
-    button:hover {
-      background: #218838;
-    }
+    button:hover { background: #218838; }
 
     #result {
       font-size: 20px;
@@ -124,7 +113,7 @@
 
 <header>
   <h1>🎉 Puzzle Game Challenge 🎉</h1>
-  <div id="timer">Loading countdown...</div>
+  <div id="timer">Game starting...</div>
 </header>
 
 <div class="container">
@@ -134,7 +123,7 @@
     <h2>Welcome Challenger 👋</h2>
     <p>
       This is not just a game — it’s a test of your mind!  
-      Solve **10 hidden puzzles** correctly and claim your reward.  
+      Solve <b>10 hidden puzzles</b> correctly and claim your reward.  
     </p>
     <p>
       💰 Rewards:  
@@ -142,7 +131,7 @@
       <br>6–9 → $10  
       <br>1–3 → $2  
     </p>
-    <button onclick="startGame()">Continue ▶</button>
+    <button onclick="startGame()">Proceed ▶</button>
   </div>
 
   <!-- Desktop: All puzzles at once -->
@@ -162,37 +151,35 @@
 
 <script>
   // ---------------- TIMER ----------------
+  let time = 300; // 5 minutes total
+  let timerInterval;
   const timerElement = document.getElementById("timer");
-  const endDate = new Date().getTime() + (3 * 24 * 60 * 60 * 1000);
 
-  const countdown = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = endDate - now;
+  function startCountdown() {
+    timerInterval = setInterval(() => {
+      let minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      timerElement.innerHTML = `⏳ ${minutes}:${seconds.toString().padStart(2,'0')}`;
+      time--;
 
-    if (distance < 0) {
-      clearInterval(countdown);
-      timerElement.innerHTML = "⏰ Time is up!";
-      return;
-    }
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    timerElement.innerHTML = `${days} Days : ${hours} Hrs : ${minutes} Min : ${seconds} Sec`;
-  }, 1000);
+      if (time < 0) {
+        clearInterval(timerInterval);
+        timerElement.innerHTML = "⏰ Time is up!";
+        checkAnswers(); // auto-submit when time runs out
+      }
+    }, 1000);
+  }
 
   // ---------------- PUZZLES DATA ----------------
   const puzzles = [
-    {img:"images/puzzle1.jpg", answer:"bed of the same feathers"},
-    {img:"images/puzzle2.jpg", answer:"content"},
-    {img:"images/puzzle3.jpg", answer:"fantasy"},
-    {img:"images/puzzle4.jpg", answer:"water mark"},
-    {img:"images/puzzle5.jpg", answer:"capability"},
-    {img:"images/puzzle6.jpg", answer:"power bank"},
-    {img:"images/puzzle7.jpg", answer:"loyalty"},
-    {img:"images/puzzle8.jpg", answer:"energy"},
+    {img:"feem_924CF_IMG_1202_edited.jpg", answer:"content"},
+    {img:"feem_924CF_IMG_1206_edited.jpg", answer:"capability"},
+    {img:"feem_924CF_IMG_1207_edited.jpg", answer:"power bank"},
+    {img:"feem_924CF_IMG_1208_edited.jpg", answer:"fantasy"},
+    {img:"feem_924CF_IMG_1236_edited.jpg", answer:"travel over sea"},
+    {img:"feem_924CF_IMG_1237_edited.jpg", answer:"try to understand"},
+    {img:"feem_924CF_IMG_1241_edited.jpg", answer:"ready to go"},
+    {img:"feem_924CF_IMG_1201_edited.jpg", answer:"water mark"},
     {img:"images/puzzle9.jpg", answer:"team work"},
     {img:"images/puzzle10.jpg", answer:"vision"}
   ];
@@ -208,6 +195,8 @@
       document.getElementById("mobileGame").classList.add("active");
       loadMobilePuzzle(0);
     }
+
+    startCountdown();
   }
 
   // ---------------- DESKTOP MODE ----------------
@@ -251,6 +240,7 @@
 
   // ---------------- CHECK ANSWERS ----------------
   function checkAnswers() {
+    clearInterval(timerInterval);
     let score = 0;
 
     // Desktop
