@@ -21,6 +21,15 @@
     }
 
     h1 { margin: 0 0 10px; font-size: 24px; }
+
+    #tagline {
+      margin: 10px auto;
+      font-size: 16px;
+      max-width: 700px;
+      line-height: 1.5;
+      color: #f1f1f1;
+    }
+
     #timer { font-size: 20px; font-weight: bold; }
 
     .container {
@@ -48,7 +57,6 @@
       border-radius: 10px;
     }
 
-    /* Updated Input Style */
     .puzzle input {
       width: 80%;
       padding: 12px;
@@ -71,12 +79,14 @@
 
     .puzzle input.correct {
       border-color: green;
-      background: #2e472e;
+      background: #eaffea;
+      color: #222;
     }
 
     .puzzle input.incorrect {
       border-color: red;
-      background: #472e2e;
+      background: #ffeaea;
+      color: #222;
     }
 
     button {
@@ -92,7 +102,7 @@
     }
     button:hover { background: #218838; }
 
-    #resultDesktop, #resultMobile {
+    #result {
       font-size: 20px;
       margin-top: 20px;
       font-weight: bold;
@@ -104,7 +114,6 @@
       font-size: 16px;
     }
 
-    /* Progress Bar */
     #progressWrapper {
       background: #ddd;
       border-radius: 10px;
@@ -112,6 +121,7 @@
       margin: 10px 0;
       height: 15px;
     }
+
     #progressBar {
       background: #28a745;
       width: 0%;
@@ -122,7 +132,7 @@
     @media (max-width: 768px) {
       h1 { font-size: 20px; }
       #timer { font-size: 18px; }
-      .puzzle input { width: 90%; }
+      .puzzle input { width: 100%; }
       .desktop-view { display: none; }
       .mobile-view { display: block; }
     }
@@ -137,6 +147,8 @@
 
 <header>
   <h1>🎉 Puzzle Game Challenge 🎉</h1>
+  <p id="tagline">Think you’re sharp? Prove it! 🧩<br>
+  Each puzzle hides a word or phrase. Spot the connection, type your answer, and climb the challenge ladder.</p>
   <div id="timer">Game starting...</div>
 </header>
 
@@ -158,14 +170,13 @@
     <button onclick="startGame()">Proceed ▶</button>
   </div>
 
-  <!-- Desktop -->
+  <!-- Desktop: All puzzles at once -->
   <div id="desktopGame" class="screen desktop-view">
     <div id="puzzlesDesktop"></div>
     <div id="resultDesktop"></div>
-    <button onclick="checkAnswers()">Submit All Answers</button>
   </div>
 
-  <!-- Mobile -->
+  <!-- Mobile: One puzzle at a time -->
   <div id="mobileGame" class="screen mobile-view">
     <div id="progressWrapper"><div id="progressBar"></div></div>
     <div id="puzzleContainer"></div>
@@ -190,23 +201,23 @@
       if (time < 0) {
         clearInterval(timerInterval);
         timerElement.innerHTML = "⏰ Time is up!";
-        checkAnswers(); // auto-submit
+        checkAnswers();
       }
     }, 1000);
   }
 
   // ---------------- PUZZLES ----------------
   const puzzles = [
-    {img:"feem_924CF_IMG_1202_edited.jpg", answer:"content", alt:"Puzzle image about content"},
-    {img:"feem_924CF_IMG_1206_edited.jpg", answer:"capability", alt:"Puzzle showing capability"},
-    {img:"feem_924CF_IMG_1207_edited.jpg", answer:"power bank", alt:"Puzzle with a power bank"},
-    {img:"feem_924CF_IMG_1208_edited.jpg", answer:"fantasy", alt:"Fantasy themed puzzle"},
-    {img:"feem_924CF_IMG_1236_edited.jpg", answer:"travel over sea", alt:"Travel over sea image"},
-    {img:"feem_924CF_IMG_1237_edited.jpg", answer:"try to understand", alt:"Puzzle hinting understanding"},
-    {img:"feem_924CF_IMG_1241_edited.jpg", answer:"ready to go", alt:"Ready to go puzzle"},
-    {img:"feem_924CF_IMG_1201_edited.jpg", answer:"water mark", alt:"Puzzle with water mark"},
-    {img:"feem_924CF_IMG_1243_edited.jpg", answer:"side hustle", alt:"Side hustle representation"},
-    {img:"feem_924CF_IMG_1238_edited.jpg", answer:"forget it", alt:"Forget it puzzle"}
+    {img:"feem_924CF_IMG_1202_edited.jpg", answer:"content", alt:"Puzzle showing the word content hidden in image"},
+    {img:"feem_924CF_IMG_1206_edited.jpg", answer:"capability", alt:"Puzzle showing a cap + ABILITY"},
+    {img:"feem_924CF_IMG_1207_edited.jpg", answer:"power bank", alt:"Puzzle with battery and electricity symbols"},
+    {img:"feem_924CF_IMG_1208_edited.jpg", answer:"fantasy", alt:"Puzzle with dreamlike visuals"},
+    {img:"feem_924CF_IMG_1236_edited.jpg", answer:"travel over sea", alt:"Puzzle showing ship and waves"},
+    {img:"feem_924CF_IMG_1237_edited.jpg", answer:"try to understand", alt:"Puzzle with thinking face and question mark"},
+    {img:"feem_924CF_IMG_1241_edited.jpg", answer:"ready to go", alt:"Puzzle showing suitcase and plane"},
+    {img:"feem_924CF_IMG_1201_edited.jpg", answer:"water mark", alt:"Puzzle with water + mark symbol"},
+    {img:"feem_924CF_IMG_1243_edited.jpg", answer:"side hustle", alt:"Puzzle showing briefcase and dollar sign"},
+    {img:"feem_924CF_IMG_1238_edited.jpg", answer:"forget it", alt:"Puzzle with memory/erase symbol"}
   ];
 
   // Shuffle puzzles
@@ -230,20 +241,7 @@
       document.getElementById("mobileGame").classList.add("active");
       loadMobilePuzzle(0);
     }
-
-    time = 300; // reset timer
     startCountdown();
-
-    // Restore saved state if available
-    const saved = localStorage.getItem("puzzleProgress");
-    if (saved) {
-      const savedData = JSON.parse(saved);
-      puzzles.forEach((p, i) => {
-        if (savedData[i]?.userAnswer) {
-          p.userAnswer = savedData[i].userAnswer;
-        }
-      });
-    }
   }
 
   // ---------------- DESKTOP ----------------
@@ -255,7 +253,7 @@
         <div class="puzzle">
           <h3>Puzzle ${i+1}</h3>
           <img src="${p.img}" alt="${p.alt}">
-          <input type="text" placeholder="Enter your answer" data-answer="${p.answer}" id="input${i}" value="${p.userAnswer || ''}">
+          <input type="text" placeholder="Enter your answer" data-answer="${p.answer}" id="input${i}">
           <button onclick="submitAnswer(${i}, 'desktop')">Submit</button>
           <div id="notify${i}" class="notify"></div>
         </div>`;
@@ -270,7 +268,7 @@
       <div class="puzzle">
         <h3>Puzzle ${i+1}</h3>
         <img src="${puzzles[i].img}" alt="${puzzles[i].alt}">
-        <input type="text" placeholder="Enter your answer" data-answer="${puzzles[i].answer}" id="mobileInput" value="${puzzles[i].userAnswer || ''}">
+        <input type="text" placeholder="Enter your answer" data-answer="${puzzles[i].answer}" id="mobileInput">
         <button onclick="submitAnswer(${i}, 'mobile')">Submit</button>
         <div id="mobileNotify" class="notify"></div>
       </div>`;
@@ -320,11 +318,9 @@
       notify.style.color = "red";
     }
 
-    // Save answer
     puzzles[index].userAnswer = input.value.trim();
     localStorage.setItem("puzzleProgress", JSON.stringify(puzzles));
 
-    // Show Next on mobile
     if (mode === "mobile") {
       document.getElementById("nextBtn").style.display = "inline-block";
     }
@@ -335,11 +331,19 @@
     clearInterval(timerInterval);
     let score = 0;
 
-    puzzles.forEach(p => {
-      if (p.userAnswer && p.userAnswer.toLowerCase().trim() === p.answer.toLowerCase()) {
+    document.querySelectorAll('#puzzlesDesktop input').forEach((input, i) => {
+      if (input.value.toLowerCase().trim() === input.dataset.answer.toLowerCase().trim()) {
         score++;
       }
     });
+
+    if (window.innerWidth <= 768) {
+      puzzles.forEach(p => {
+        if (p.userAnswer && p.userAnswer.toLowerCase() === p.answer.toLowerCase()) {
+          score++;
+        }
+      });
+    }
 
     let reward = "";
     if (score === 10) reward = "$50 🏆";
@@ -347,16 +351,26 @@
     else if (score >= 1) reward = "$2 💰";
     else reward = "No reward 😢";
 
-    const resultText = `You got <b>${score}/10</b> correct.<br>Your reward: <b>${reward}</b><br><br>
+    document.getElementById("resultDesktop").innerHTML = 
+      document.getElementById("resultMobile").innerHTML = 
+      `You got <b>${score}/10</b> correct.<br>Your reward: <b>${reward}</b><br><br>
       <a href="https://mobilerewards.link/unlock/sXxG" target="_blank">
         <button>🎁 Get Your Award</button>
       </a>`;
-
-    document.getElementById("resultDesktop").innerHTML = resultText;
-    document.getElementById("resultMobile").innerHTML = resultText;
-
-    localStorage.removeItem("puzzleProgress"); // clear progress after finishing
   }
+
+  // ---------------- RESTORE PROGRESS ----------------
+  window.onload = () => {
+    const saved = localStorage.getItem("puzzleProgress");
+    if (saved) {
+      const savedData = JSON.parse(saved);
+      puzzles.forEach((p, i) => {
+        if (savedData[i]?.userAnswer) {
+          p.userAnswer = savedData[i].userAnswer;
+        }
+      });
+    }
+  };
 </script>
 
 </body>
