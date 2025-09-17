@@ -3,152 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Information</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Payout Request Form</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #f4f6f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
-
     header {
       background: linear-gradient(90deg, #2575fc, #6a11cb);
       color: white;
       text-align: center;
       padding: 20px;
-      font-size: 22px;
-      font-weight: 600;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px;
-    }
-
-    .card {
-      background: white;
-      padding: 35px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-      max-width: 480px;
-      width: 100%;
-    }
-
-    .card h1 {
-      text-align: center;
+    header h1 {
+      margin: 0;
       font-size: 24px;
-      color: #333;
-      margin-bottom: 15px;
     }
-
-    .payment-image {
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
       text-align: center;
       margin-bottom: 20px;
+      color: #333;
     }
-
-    .payment-image img {
-      max-width: 120px;
-    }
-
     label {
       display: block;
-      margin: 10px 0 6px;
+      margin: 12px 0 6px;
       font-weight: 600;
-      color: #444;
     }
-
     input, select {
       width: 100%;
       padding: 12px;
-      margin-bottom: 18px;
-      border: 2px solid #ddd;
+      border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 15px;
-      transition: 0.3s;
-      font-family: 'Poppins', sans-serif;
+      margin-bottom: 10px;
+      background: #f9f9f9;
     }
-
-    input:focus, select:focus {
-      border-color: #2575fc;
-      box-shadow: 0 0 6px rgba(37, 117, 252, 0.4);
-      outline: none;
-    }
-
     button {
       width: 100%;
-      padding: 15px;
-      background: linear-gradient(90deg, #28a745, #218838);
+      background: #28a745;
       color: white;
+      padding: 14px;
       border: none;
       border-radius: 8px;
-      font-size: 17px;
-      font-weight: 600;
+      font-size: 16px;
       cursor: pointer;
       transition: 0.3s;
     }
-
     button:hover {
-      opacity: 0.9;
+      background: #218838;
     }
-
-    footer {
-      background: #f1f1f1;
-      padding: 15px;
+    .status {
       text-align: center;
-      font-size: 14px;
-      color: #555;
-      border-top: 1px solid #ddd;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+    .payment-img {
+      display: block;
+      margin: 0 auto 15px;
+      width: 80px;
     }
   </style>
 </head>
 <body>
-
   <header>
-    💳 Secure Payment Portal
+    <h1>💳 Payment Information</h1>
   </header>
 
-  <main>
-    <div class="card">
-      <h1>Enter Payment Details</h1>
+  <div class="container">
+    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" alt="Payment" class="payment-img">
+    <h2>Enter Your Bank Details</h2>
+    
+    <form id="paymentForm">
+      <label>Full Name</label>
+      <input type="text" name="full_name" placeholder="Enter your full name" required>
 
-      <div class="payment-image">
-        <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Payment Illustration">
-      </div>
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter your email" required>
 
-      <form onsubmit="event.preventDefault(); window.location.href='success.html';">
-        <label for="accName">Account Name</label>
-        <input type="text" id="accName" name="accName" placeholder="Enter account name" required>
+      <label>Bank</label>
+      <select name="bank" required>
+        <option value="">-- Select Bank --</option>
+        <option value="Zenith Bank">Zenith Bank</option>
+        <option value="First Bank">First Bank</option>
+        <option value="UBA Bank">UBA Bank</option>
+      </select>
 
-        <label for="accNumber">Account Number</label>
-        <input type="text" id="accNumber" name="accNumber" placeholder="Enter account number" required>
+      <label>Account Name</label>
+      <input type="text" name="account_name" placeholder="Enter your account name" required>
 
-        <label for="bank">Select Bank</label>
-        <select id="bank" name="bank" required>
-          <option value="">-- Choose a bank --</option>
-          <option value="zenith">Zenith Bank</option>
-          <option value="first">First Bank</option>
-          <option value="uba">UBA</option>
-          <option value="gtb">GTBank</option>
-          <option value="access">Access Bank</option>
-        </select>
+      <label>Account Number</label>
+      <input type="text" name="account_number" placeholder="Enter your account number" required>
 
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  </main>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="formStatus" class="status"></div>
+  </div>
 
-  <footer>
-    🔒 Your payment details are safe and encrypted. Please ensure your bank info is correct.
-  </footer>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your PUBLIC KEY
+    })();
 
+    document.getElementById("paymentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", "#paymentForm")
+        .then(function(response) {
+          console.log("SUCCESS!", response.status, response.text);
+          window.location.href = "success.html"; // Redirect to success page
+        }, function(error) {
+          console.error("FAILED...", error);
+          document.getElementById("formStatus").innerHTML = 
+            "<p style='color:red'>❌ Failed to submit. Please try again.</p>";
+        });
+    });
+  </script>
 </body>
 </html>
