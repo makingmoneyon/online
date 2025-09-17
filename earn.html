@@ -36,6 +36,21 @@
       padding: 15px;
     }
 
+    .screen {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+
+    .intro {
+      padding: 30px;
+    }
+    .intro h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
     .puzzle {
       background: white;
       border-radius: 12px;
@@ -92,15 +107,16 @@
     }
 
     @media (max-width: 768px) {
-      h1 {
-        font-size: 20px;
-      }
-      #timer {
-        font-size: 18px;
-      }
-      .puzzle input {
-        width: 100%;
-      }
+      h1 { font-size: 20px; }
+      #timer { font-size: 18px; }
+      .puzzle input { width: 100%; }
+      .desktop-view { display: none; }
+      .mobile-view { display: block; }
+    }
+
+    @media (min-width: 769px) {
+      .desktop-view { display: block; }
+      .mobile-view { display: none; }
     }
   </style>
 </head>
@@ -112,90 +128,40 @@
 </header>
 
 <div class="container">
-  <p>Solve all 10 puzzles. Rewards based on your score:</p>
-  <ul style="text-align:left; max-width:400px; margin: 0 auto;">
-    <li>✅ 10 correct → $50</li>
-    <li>✅ 6–9 correct → $10</li>
-    <li>✅ 1–3 correct → $2</li>
-  </ul>
 
-  <!-- Puzzle 1 -->
-  <div class="puzzle">
-    <h3>Puzzle 1</h3>
-    <img src="images/puzzle1.jpg" alt="Puzzle 1">
-    <input type="text" placeholder="Enter your answer" data-answer="bed of the same feathers">
+  <!-- Intro Screen -->
+  <div id="introScreen" class="screen active intro">
+    <h2>Welcome Challenger 👋</h2>
+    <p>
+      This is not just a game — it’s a test of your mind!  
+      Solve **10 hidden puzzles** correctly and claim your reward.  
+    </p>
+    <p>
+      💰 Rewards:  
+      <br>10/10 → $50  
+      <br>6–9 → $10  
+      <br>1–3 → $2  
+    </p>
+    <button onclick="startGame()">Continue ▶</button>
   </div>
 
-  <!-- Puzzle 2 -->
-  <div class="puzzle">
-    <h3>Puzzle 2</h3>
-    <img src="images/puzzle2.jpg" alt="Puzzle 2">
-    <input type="text" placeholder="Enter your answer" data-answer="content">
+  <!-- Desktop: All puzzles at once -->
+  <div id="desktopGame" class="screen desktop-view">
+    <div id="puzzlesDesktop"></div>
+    <button onclick="checkAnswers()">Submit Answers</button>
+    <div id="result"></div>
   </div>
 
-  <!-- Puzzle 3 -->
-  <div class="puzzle">
-    <h3>Puzzle 3</h3>
-    <img src="images/puzzle3.jpg" alt="Puzzle 3">
-    <input type="text" placeholder="Enter your answer" data-answer="fantasy">
+  <!-- Mobile: One puzzle at a time -->
+  <div id="mobileGame" class="screen mobile-view">
+    <div id="puzzleContainer"></div>
+    <button id="nextBtn" onclick="nextPuzzle()">Next ▶</button>
+    <div id="result"></div>
   </div>
-
-  <!-- Puzzle 4 -->
-  <div class="puzzle">
-    <h3>Puzzle 4</h3>
-    <img src="images/puzzle4.jpg" alt="Puzzle 4">
-    <input type="text" placeholder="Enter your answer" data-answer="water mark">
-  </div>
-
-  <!-- Puzzle 5 -->
-  <div class="puzzle">
-    <h3>Puzzle 5</h3>
-    <img src="images/puzzle5.jpg" alt="Puzzle 5">
-    <input type="text" placeholder="Enter your answer" data-answer="capability">
-  </div>
-
-  <!-- Puzzle 6 -->
-  <div class="puzzle">
-    <h3>Puzzle 6</h3>
-    <img src="images/puzzle6.jpg" alt="Puzzle 6">
-    <input type="text" placeholder="Enter your answer" data-answer="power bank">
-  </div>
-
-  <!-- Puzzle 7 -->
-  <div class="puzzle">
-    <h3>Puzzle 7</h3>
-    <img src="images/puzzle7.jpg" alt="Puzzle 7">
-    <input type="text" placeholder="Enter your answer" data-answer="loyalty">
-  </div>
-
-  <!-- Puzzle 8 -->
-  <div class="puzzle">
-    <h3>Puzzle 8</h3>
-    <img src="images/puzzle8.jpg" alt="Puzzle 8">
-    <input type="text" placeholder="Enter your answer" data-answer="energy">
-  </div>
-
-  <!-- Puzzle 9 -->
-  <div class="puzzle">
-    <h3>Puzzle 9</h3>
-    <img src="images/puzzle9.jpg" alt="Puzzle 9">
-    <input type="text" placeholder="Enter your answer" data-answer="team work">
-  </div>
-
-  <!-- Puzzle 10 -->
-  <div class="puzzle">
-    <h3>Puzzle 10</h3>
-    <img src="images/puzzle10.jpg" alt="Puzzle 10">
-    <input type="text" placeholder="Enter your answer" data-answer="vision">
-  </div>
-
-  <button onclick="checkAnswers()">Submit Answers</button>
-
-  <div id="result"></div>
 </div>
 
 <script>
-  // Countdown Timer (3 days from now)
+  // ---------------- TIMER ----------------
   const timerElement = document.getElementById("timer");
   const endDate = new Date().getTime() + (3 * 24 * 60 * 60 * 1000);
 
@@ -217,24 +183,97 @@
     timerElement.innerHTML = `${days} Days : ${hours} Hrs : ${minutes} Min : ${seconds} Sec`;
   }, 1000);
 
-  // Check Answers
+  // ---------------- PUZZLES DATA ----------------
+  const puzzles = [
+    {img:"images/puzzle1.jpg", answer:"bed of the same feathers"},
+    {img:"images/puzzle2.jpg", answer:"content"},
+    {img:"images/puzzle3.jpg", answer:"fantasy"},
+    {img:"images/puzzle4.jpg", answer:"water mark"},
+    {img:"images/puzzle5.jpg", answer:"capability"},
+    {img:"images/puzzle6.jpg", answer:"power bank"},
+    {img:"images/puzzle7.jpg", answer:"loyalty"},
+    {img:"images/puzzle8.jpg", answer:"energy"},
+    {img:"images/puzzle9.jpg", answer:"team work"},
+    {img:"images/puzzle10.jpg", answer:"vision"}
+  ];
+
+  // ---------------- INTRO TO GAME ----------------
+  function startGame() {
+    document.getElementById("introScreen").classList.remove("active");
+
+    if (window.innerWidth > 768) {
+      document.getElementById("desktopGame").classList.add("active");
+      loadDesktopPuzzles();
+    } else {
+      document.getElementById("mobileGame").classList.add("active");
+      loadMobilePuzzle(0);
+    }
+  }
+
+  // ---------------- DESKTOP MODE ----------------
+  function loadDesktopPuzzles() {
+    const container = document.getElementById("puzzlesDesktop");
+    container.innerHTML = "";
+    puzzles.forEach((p, i) => {
+      container.innerHTML += `
+        <div class="puzzle">
+          <h3>Puzzle ${i+1}</h3>
+          <img src="${p.img}" alt="Puzzle ${i+1}">
+          <input type="text" placeholder="Enter your answer" data-answer="${p.answer}">
+        </div>`;
+    });
+  }
+
+  // ---------------- MOBILE MODE ----------------
+  let currentPuzzle = 0;
+  function loadMobilePuzzle(i) {
+    const container = document.getElementById("puzzleContainer");
+    container.innerHTML = `
+      <div class="puzzle">
+        <h3>Puzzle ${i+1}</h3>
+        <img src="${puzzles[i].img}" alt="Puzzle ${i+1}">
+        <input type="text" placeholder="Enter your answer" data-answer="${puzzles[i].answer}">
+      </div>`;
+  }
+
+  function nextPuzzle() {
+    const input = document.querySelector('#puzzleContainer input');
+    puzzles[currentPuzzle].userAnswer = input.value.trim();
+
+    if (currentPuzzle < puzzles.length - 1) {
+      currentPuzzle++;
+      loadMobilePuzzle(currentPuzzle);
+    } else {
+      checkAnswers();
+      document.getElementById("nextBtn").style.display = "none";
+    }
+  }
+
+  // ---------------- CHECK ANSWERS ----------------
   function checkAnswers() {
-    const inputs = document.querySelectorAll('.puzzle input');
     let score = 0;
 
-    inputs.forEach(input => {
+    // Desktop
+    const inputs = document.querySelectorAll('#puzzlesDesktop input');
+    inputs.forEach((input, i) => {
       const correctAnswer = input.dataset.answer.toLowerCase().trim();
       const userAnswer = input.value.toLowerCase().trim();
-
       if (userAnswer === correctAnswer) {
         input.classList.add("correct");
-        input.classList.remove("incorrect");
         score++;
       } else {
         input.classList.add("incorrect");
-        input.classList.remove("correct");
       }
     });
+
+    // Mobile
+    if (window.innerWidth <= 768) {
+      puzzles.forEach(p => {
+        if (p.userAnswer && p.userAnswer.toLowerCase() === p.answer.toLowerCase()) {
+          score++;
+        }
+      });
+    }
 
     let reward = "";
     if (score === 10) reward = "$50 🏆";
