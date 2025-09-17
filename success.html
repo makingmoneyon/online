@@ -1,63 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Paying Quane - Success</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      text-align: center;
-      padding: 50px 20px;
+    :root{
+      --accent1:#2575fc;
+      --accent2:#6a11cb;
+      --success:#28a745;
+      --muted:#556073;
     }
+    body { font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif; background:#f4f6f9; margin:0; padding:28px; }
     .box {
-      max-width: 600px;
+      max-width: 860px;
+      width: 94%;
       margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background:#fff;
+      padding:28px;
+      border-radius:12px;
+      box-shadow:0 10px 30px rgba(15,15,25,0.06);
     }
-    h1 {
-      color: #28a745;
+    .header {
+      display:flex; align-items:center; gap:14px;
     }
-    p {
-      color: #333;
-      font-size: 16px;
-      line-height: 1.6;
+    .badge {
+      width:64px; height:64px; border-radius:10px; background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:22px;
     }
+    h1 { margin:0 0 6px; font-size:24px; color:var(--success); }
+    p { margin:12px 0; color:#222; font-size:16px; line-height:1.5; }
+    .details {
+      display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-top:12px;
+    }
+    .detail-card {
+      flex:1 1 240px; background:#fbfdff; border-radius:10px; padding:12px 14px; border:1px solid #eef4ff;
+    }
+    .detail-card b { display:block; margin-bottom:6px; color:#164e9b; }
+    .muted { color:var(--muted); font-size:14px; }
+
     .share {
-      margin-top: 30px;
+      margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;
     }
     .share a {
-      display: inline-block;
-      margin: 10px;
-      padding: 12px 18px;
-      border-radius: 6px;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
+      display:inline-flex; align-items:center; gap:10px; text-decoration:none; padding:10px 14px; border-radius:8px; color:#fff; font-weight:700;
+      box-shadow:0 6px 18px rgba(15,15,25,0.06);
     }
-    .whatsapp { background: #25D366; }
-    .facebook { background: #3b5998; }
-    .snapchat { background: #fffc00; color: black; }
+    .share img { width:22px; height:22px; display:block; }
+    .whatsapp { background:#25D366; }
+    .facebook { background:#1877F2; }
+    .snapchat {
+      background:#FFFC00; color:#000; padding:10px 12px; border-radius:8px; font-weight:800;
+      display:inline-flex; align-items:center; gap:10px;
+      box-shadow:0 6px 18px rgba(15,15,25,0.06);
+    }
+
+    .note { margin-top:18px; color:var(--muted); font-size:14px; }
+    @media (max-width:640px) {
+      .header { gap:10px; }
+      .badge { width:56px; height:56px; font-size:20px; }
+      .detail-card { flex-basis:100%; }
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>🎉 Success!</h1>
-    <p>Thank you for submitting your details. <br>
-    You’ve been successfully added to <b>Paying Quane</b>.</p>
-    
-    <p>💡 Your payout will be processed within <b>3 working days</b>.  
-    Share this with 5 friends to be credited in less than <b>5 hours</b>!</p>
-    
-    <div class="share">
-      <a class="whatsapp" href="https://wa.me/?text=Join%20Paying%20Quane%20today%20and%20get%20paid%20fast!%20https://makingmoneyon.github.io/online/earn" target="_blank">WhatsApp</a>
-      <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://makingmoneyon.github.io/online/earn" target="_blank">Facebook</a>
-      <a class="snapchat" href="https://www.snapchat.com/scan?attachmentUrl=https://makingmoneyon.github.io/online/earn" target="_blank">Snapchat</a>
+  <div class="box" role="main" aria-labelledby="successHeading">
+    <div class="header">
+      <div class="badge">PQ</div>
+      <div>
+        <h1 id="successHeading">🎉 Success — You're in Paying Quane!</h1>
+        <div class="muted" id="subHeading">We received your payout request.</div>
+      </div>
+    </div>
+
+    <p id="welcomeText">Thank you — your information has been received and added to the Paying Quane queue.</p>
+
+    <div class="details" aria-live="polite">
+      <div class="detail-card">
+        <b id="showName">Name</b>
+        <div id="showNameVal" class="muted">—</div>
+      </div>
+
+      <div class="detail-card">
+        <b id="showBank">Bank</b>
+        <div id="showBankVal" class="muted">—</div>
+      </div>
+
+      <div class="detail-card">
+        <b>Account (masked)</b>
+        <div id="showAcctVal" class="muted">—</div>
+      </div>
+    </div>
+
+    <p class="note" id="processingNote">Payouts are processed within <strong>3 working days</strong>. Share with 5 contacts to speed it up (credited in under 5 hours).</p>
+
+    <div class="share" aria-label="Share buttons">
+      <!-- WhatsApp -->
+      <a id="waShare" class="whatsapp" target="_blank" rel="noopener noreferrer">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"> Share on WhatsApp
+      </a>
+
+      <!-- Facebook -->
+      <a id="fbShare" class="facebook" target="_blank" rel="noopener noreferrer">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"> Share on Facebook
+      </a>
+
+      <!-- Snapchat (logo via Wikimedia commons) -->
+      <a id="scShare" class="snapchat" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1024px-Snapchat_logo.svg.png" alt="Snapchat" style="width:20px;height:20px;"> Share on Snapchat
+      </a>
+    </div>
+
+    <div class="note" style="margin-top:18px;">
+      If the page did not populate with your name, it may be because you opened this page directly — return to the form and submit to see a personalized confirmation.
     </div>
   </div>
+
+<script>
+  // read preview from sessionStorage (set by payment page)
+  (function(){
+    try {
+      const raw = sessionStorage.getItem('payout_preview');
+      let preview = null;
+      if (raw) {
+        preview = JSON.parse(raw);
+        // remove it immediately so it isn't persisted
+        sessionStorage.removeItem('payout_preview');
+      }
+
+      // fallback to generic if missing
+      const fullName = preview && preview.full_name ? preview.full_name : '';
+      const bank = preview && preview.bank ? preview.bank : '';
+      const accountMasked = preview && preview.masked_account ? preview.masked_account : '';
+
+      const nameVal = document.getElementById('showNameVal');
+      const bankVal = document.getElementById('showBankVal');
+      const acctVal = document.getElementById('showAcctVal');
+      const subHeading = document.getElementById('subHeading');
+      const welcomeText = document.getElementById('welcomeText');
+
+      if (fullName) {
+        nameVal.textContent = fullName;
+        welcomeText.textContent = `Thank you, ${fullName}! Your information has been received and added to the Paying Quane queue.`;
+      } else {
+        nameVal.textContent = '—';
+      }
+
+      if (bank) bankVal.textContent = bank; else bankVal.textContent = '—';
+      if (accountMasked) acctVal.textContent = accountMasked; else acctVal.textContent = '—';
+
+      // prepare share message (use name when available)
+      const baseLink = 'https://makingmoneyon.github.io/online/earn';
+      const person = fullName ? `${fullName} just joined Paying Quane! ` : 'Join Paying Quane! ';
+      const shareMessage = encodeURIComponent(`${person}Get paid faster by completing puzzles & claiming rewards. Check it out: ${baseLink}`);
+
+      // set share links
+      document.getElementById('waShare').href = `https://api.whatsapp.com/send?text=${shareMessage}`;
+      document.getElementById('fbShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseLink)}&quote=${shareMessage}`;
+      // Snapchat doesn't support prefilled text from URL; open base link as fallback
+      document.getElementById('scShare').href = `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(baseLink)}`;
+
+    } catch (err) {
+      console.warn('Could not populate preview:', err);
+    }
+  })();
+</script>
 </body>
 </html>
